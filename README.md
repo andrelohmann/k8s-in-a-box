@@ -57,4 +57,8 @@ ethernets:
 ### Kubernetes
 
 https://phoenixnap.com/kb/how-to-install-kubernetes-on-a-bare-metal-server
+https://opensource.com/article/20/6/kubernetes-raspberry-pi
+https://www.serverlab.ca/tutorials/containers/kubernetes/deploying-kubernetes-ubuntu-18-04/
+https://thenewstack.io/how-to-deploy-a-kubernetes-cluster-with-ubuntu-server-18-04/
+https://www.youtube.com/watch?v=qv3_gLvjITk
 
