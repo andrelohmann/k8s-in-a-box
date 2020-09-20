@@ -54,4 +54,7 @@ ethernets:
         addresses: [192.168.199.1]
 ```
 
+### Kubernetes
+
+https://phoenixnap.com/kb/how-to-install-kubernetes-on-a-bare-metal-server
 
