@@ -1,0 +1,6 @@
+---
+- name: Upgrade the OS (apt-get dist-upgrade)
+  apt:
+    update_cache: yes
+    upgrade: dist
+...
