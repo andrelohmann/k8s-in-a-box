@@ -12,4 +12,13 @@
   - andrelohmann.kubectl
   - ssh_key
 
+  tasks:
+  - name: install ansible-galaxy roles
+    shell: ansible-galaxy install -r requirements.yml
+    args:
+      executable: /bin/bash
+      chdir: /home/vagrant/ansible
+    become: yes
+    become_user: vagrant
+
 ...
