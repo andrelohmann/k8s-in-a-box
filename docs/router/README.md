@@ -33,7 +33,6 @@ Go to __Network -> Interfaces__ and **Edit** the LAN interface.
 
 <div align="center">
   <img src="images/01_configure_ip.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 Change the IP Address to the desired network and press "Save". Afterwards press "Save and Apply".
@@ -46,14 +45,12 @@ Go to __Network -> Wireless__ and remove all SSIDs.
 
 <div align="center">
   <img src="images/02_join_wlan.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 Press "Scan" on radio0 and "Join" your local WLAN.
 
 <div align="center">
   <img src="images/03_wwan.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 Keep the name "wwan", set the net WPA Passphrase and assign the WAN Firewall zone.
@@ -66,7 +63,6 @@ On __Network -> Wireless__ press "Add" next to radio0.
 
 <div align="center">
   <img src="images/03_wwan.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 Set your ESSID and select LAN for the Network. Also set your "Wireless Security"
@@ -78,7 +74,6 @@ __Network -> Wireless__ now looks similar to the following:
 
 <div align="center">
   <img src="images/05_wireless.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 Now connect to the router via the new AP and disconnect your LAN cable.
@@ -89,7 +84,6 @@ __Network -> Firewall__ should look the following:
 
 <div align="center">
   <img src="images/06_firewall.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 ### Configure the switch ports
@@ -98,7 +92,6 @@ Go to __Network -> Switch__ and remove VLAN ID 2.
 
 <div align="center">
   <img src="images/07_switch.png" />
-  <p>GL-MT300N-V2</p>
 </div>
 
 ### Configure the interfaces
@@ -107,5 +100,18 @@ Go to __Network -> Interfaces__ and remove all interfaces except LAN and WWAN.
 
 <div align="center">
   <img src="images/08_interfaces.png" />
-  <p>GL-MT300N-V2</p>
+</div>
+
+### Configure DNS
+
+Go to __Network -> DHCP and DNS__ and set Local Server and Local Domain.
+
+<div align="center">
+  <img src="images/09_dns.png" />
+</div>
+
+Go to __Network -> Hostnames__ and create the entries for all 7 nodes.
+
+<div align="center">
+  <img src="images/10_hostnames.png" />
 </div>
