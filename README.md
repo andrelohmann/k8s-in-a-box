@@ -111,4 +111,5 @@ ansible-playbook playbook.yml
   * https://thenewstack.io/how-to-deploy-a-kubernetes-cluster-with-ubuntu-server-18-04/
   * https://www.youtube.com/watch?v=qv3_gLvjITk
   * https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/#stacked-control-plane-and-etcd-nodes
+  * https://bee42.com/de/blog/tutorials/kubernetes-cluster-on-embedded/
   * https://rook.io/
