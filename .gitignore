@@ -1,4 +1,5 @@
 .DS_Store
+/vagrant/.vagrant
 /vagrant/*.log
 /vagrant/ansible_vagrant/roles/andrelohmann.*
 /ansible/roles/andrelohmann.*
