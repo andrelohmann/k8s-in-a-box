@@ -110,6 +110,11 @@ ansible-playbook playbook.yml
   * https://www.serverlab.ca/tutorials/containers/kubernetes/deploying-kubernetes-ubuntu-18-04/
   * https://thenewstack.io/how-to-deploy-a-kubernetes-cluster-with-ubuntu-server-18-04/
   * https://www.youtube.com/watch?v=qv3_gLvjITk
+  * https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+  * https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
   * https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/#stacked-control-plane-and-etcd-nodes
+  * https://kubernetes.io/docs/concepts/storage/
+  * https://linuxconfig.org/how-to-install-kubernetes-on-ubuntu-18-04-bionic-beaver-linux
   * https://bee42.com/de/blog/tutorials/kubernetes-cluster-on-embedded/
   * https://rook.io/
+  * https://rook.io/docs/rook/v1.4/ceph-quickstart.html
