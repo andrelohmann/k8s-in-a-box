@@ -1,0 +1,56 @@
+iptables:
+  router: True  # True if forwarding needs to be allowed
+  pingables:  # hosts, that are allowed to ping the target
+  - host: proxy.k8s.lan
+    ip: 192.168.199.10
+  - host: master1.k8s.lan
+    ip: 192.168.199.11
+  - host: master2.k8s.lan
+    ip: 192.168.199.12
+  - host: master3.k8s.lan
+    ip: 192.168.199.13
+  - host: worker1.k8s.lan
+    ip: 192.168.199.21
+  - host: worker2.k8s.lan
+    ip: 192.168.199.22
+  - host: worker3.k8s.lan
+    ip: 192.168.199.23
+  custom_pre_rules: [] # add custom rules
+  chains:
+  - name: HTTP
+    comment: "all HTTP and HTTPS Traffic"
+    protocol: tcp  # tcp/icmp/udp
+    ports:
+    - 80
+    - 443
+  - name: Worker
+    comment: "Kubelet API"
+    protocol: tcp  # tcp/icmp/udp
+    ports:
+    - 10250
+    - 10251
+    - 10252
+    sources:
+    - host: master1.k8s.lan
+      ip: 192.168.199.11
+    - host: master2.k8s.lan
+      ip: 192.168.199.12
+    - host: master3.k8s.lan
+      ip: 192.168.199.13
+    - host: worker1.k8s.lan
+      ip: 192.168.199.21
+    - host: worker2.k8s.lan
+      ip: 192.168.199.22
+    - host: worker3.k8s.lan
+      ip: 192.168.199.23
+  - name: API Server
+    comment: "Kubernetes API Server"
+    protocol: tcp # tcp/icmp/udp
+    ports:
+    - 6443
+  - name: Service ports
+    comment: "NodePort Services"
+    protocol: tcp # tcp/icmp/udp
+    ports:
+    - 30000:32767
+  custom_post_rules: []

@@ -1,0 +1,30 @@
+---
+
+- name: Instal HA Proxy
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - haproxy
+
+- name: Copy haproxy.cfg
+  copy:
+    src: haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart haproxy
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: haproxy
+
+...

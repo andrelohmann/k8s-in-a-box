@@ -7,6 +7,19 @@
   roles:
   - andrelohmann.root_colored_prompt
   - update_upgrade
+  - andrelohmann.iptables
+  # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
+
+- hosts: proxy
+  become: true
+  become_method: sudo
+
+  vars:
+    some_var: some_value
+
+  roles:
+  - ha_proxy
+  # https://github.com/kubernetes/kubeadm/blob/master/docs/ha-considerations.md
 
 - hosts: k8s
   become: true
@@ -18,5 +31,7 @@
   roles:
   - andrelohmann.docker
   - rpi_k8s_install
+  # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+  # https://opensource.com/article/20/6/kubernetes-raspberry-pi
 
 ...
