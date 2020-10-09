@@ -4,11 +4,19 @@
   become: true
   become_method: sudo
 
-  #vars:
-  #  some_var: some_value
-
   roles:
   - andrelohmann.root_colored_prompt
   - update_upgrade
+
+- hosts: k8s
+  become: true
+  become_method: sudo
+
+  vars:
+    some_var: some_value
+
+  roles:
+  - andrelohmann.docker
+  - rpi_k8s_install
 
 ...

@@ -18,3 +18,7 @@ master3.k8s.lan
 worker1.k8s.lan
 worker2.k8s.lan
 worker3.k8s.lan
+
+[k8s:children]
+master
+worker
