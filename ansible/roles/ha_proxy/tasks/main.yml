@@ -1,6 +1,6 @@
 ---
 
-- name: Instal HA Proxy
+- name: Install HA Proxy
   apt:
     name: "{{ packages }}"
     state: latest

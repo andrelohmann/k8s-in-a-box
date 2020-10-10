@@ -29,7 +29,7 @@ iptables:
       ip: 192.168.199.12
     - host: master3.k8s.lan
       ip: 192.168.199.13
-  - name: Service ports
+  - name: ServicePorts
     comment: "NodePort Services"
     protocol: tcp # tcp/icmp/udp
     ports:

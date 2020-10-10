@@ -43,12 +43,12 @@ iptables:
       ip: 192.168.199.22
     - host: worker3.k8s.lan
       ip: 192.168.199.23
-  - name: API Server
+  - name: APIServer
     comment: "Kubernetes API Server"
     protocol: tcp # tcp/icmp/udp
     ports:
     - 6443
-  - name: Service ports
+  - name: ServicePorts
     comment: "NodePort Services"
     protocol: tcp # tcp/icmp/udp
     ports:

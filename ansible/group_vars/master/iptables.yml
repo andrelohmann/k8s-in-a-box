@@ -17,12 +17,12 @@ iptables:
     ip: 192.168.199.23
   custom_pre_rules: [] # add custom rules
   chains:
-  - name: API Server
+  - name: APIServer
     comment: "Kubernetes API server"
     protocol: tcp  # tcp/icmp/udp
     ports:
     - 6443
-  - name: Control Plane
+  - name: ControlPlane
     comment: "Kubelet"
     protocol: tcp  # tcp/icmp/udp
     ports:
