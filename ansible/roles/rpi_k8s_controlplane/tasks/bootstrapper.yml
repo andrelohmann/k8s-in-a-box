@@ -1,0 +1,89 @@
+---
+
+- name: check for token
+  stat:
+    path: /opt/TOKEN
+  register: token_file
+
+- name: crate token file if not existen
+  block:
+
+  - name: generate token
+    shell: kubeadm token generate
+    args:
+      executable: /bin/bash
+    register: _token
+
+  - name: write token to /opt/TOKEN
+    copy:
+      content: "{{ _token.stdout }}"
+      dest: /opt/TOKEN
+
+  when: not token_file.stat.exists
+
+- name: check for certificate-key
+  stat:
+    path: /opt/CERTIFICATE_KEY
+  register: certkey_file
+
+- name:
+  block:
+
+  - name: generate certificate-key
+    shell: kubeadm alpha certs certificate-key
+    args:
+      executable: /bin/bash
+    register: _certificate_key
+
+  - name: write certificate-key to /opt/CERTIFICATE_KEY
+    copy:
+      content: "{{ _certificate_key.stdout }}"
+      dest: /opt/CERTIFICATE_KEY
+
+  when: not certkey_file.stat.exists
+
+- name: fetch kubectl version
+  shell: kubectl version --client --short | grep Client | cut -d " " -f 3
+  args:
+    executable: /bin/bash
+  register: _kubectl_version
+
+- name: Initialize the first controlplane node
+  shell: kubeadm init --token=$(cat /opt/TOKEN) --kubernetes-version={{ _kubectl_version.stdout }} --control-plane-endpoint "proxy.k8s.lan:6443" --pod-network-cidr=10.100.0.0/16 --upload-certs --certificate-key $(cat /opt/CERTIFICATE_KEY)
+  args:
+    executable: /bin/bash
+  register: _kubeadm_init
+
+- name: display _kubeadm_init
+  debug:
+    msg: "{{ _kubeadm_init.stdout_lines }}"
+
+- name: Extract CA key hash
+  shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  args:
+    executable: /bin/bash
+  register: _ca_key_hash
+
+- name: write CA key hash to /opt/CA_KEY_HASH
+  copy:
+    content: "sha256:{{ _ca_key_hash.stdout }}"
+    dest: /opt/CA_KEY_HASH
+
+- name: Create .kube folder
+  file:
+    state: directory
+    path: /root/.kube
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0644
+
+...

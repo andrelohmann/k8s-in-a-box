@@ -3,3 +3,5 @@
 /vagrant/*.log
 /vagrant/ansible_vagrant/roles/andrelohmann.*
 /ansible/roles/andrelohmann.*
+/ansible/out/*
+!/ansible/out/.gitkeep

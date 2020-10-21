@@ -1,0 +1,69 @@
+---
+
+- name: Is bootstrapper
+  set_fact:
+    is_bootstrapper: "{{ groups['master'].index(inventory_hostname) == 0 }}"
+
+- name: init controlplane on first master
+  block:
+
+  - name: check if server is running / controlplane has been initialized
+    shell: "kubectl version --short 2>&1 | grep Server"
+    failed_when: false
+    changed_when: false
+    register: kubectl_server
+
+  - name: include bootstrapper tasks if kubectl_server return does not equal 0 (is error)
+    include: bootstrapper.yml
+    when: kubectl_server.rc != 0
+
+  - name: sync TOKEN file locally
+    fetch:
+      src: /opt/TOKEN
+      dest: out/TOKEN
+      flat: yes
+
+  - name: sync CERTIFICATE_KEY file locally
+    fetch:
+      src: /opt/CERTIFICATE_KEY
+      dest: out/CERTIFICATE_KEY
+      flat: yes
+
+  - name: sync CA_KEY_HASH file locally
+    fetch:
+      src: /opt/CA_KEY_HASH
+      dest: out/CA_KEY_HASH
+      flat: yes
+
+  when: is_bootstrapper
+
+- name: join seconbd and third master to controlplane
+  block:
+
+  - name: Copy TOKEN to /opt/TOKEN
+    copy:
+      src: out/TOKEN
+      dest: /opt/TOKEN
+
+  - name: Copy CERTIFICATE_KEY to /opt/CERTIFICATE_KEY
+    copy:
+      src: out/CERTIFICATE_KEY
+      dest: /opt/CERTIFICATE_KEY
+
+  - name: Copy CA_KEY_HASH to /opt/CA_KEY_HASH
+    copy:
+      src: out/CA_KEY_HASH
+      dest: /opt/CA_KEY_HASH
+
+  - name: check if server is running / controlplane has been initialized
+    shell: "kubectl version --short 2>&1 | grep Server"
+    failed_when: false
+    changed_when: false
+    register: kubectl_server
+
+  - name: include controlplane tasks if kubectl_server return does not equal 0 (is error)
+    include: controlplane.yml
+    when: kubectl_server.rc != 0
+
+  when: not is_bootstrapper
+...

@@ -1,0 +1,36 @@
+---
+
+- name: fetch kubectl version
+  shell: kubectl version --client --short | grep Client | cut -d " " -f 3
+  args:
+    executable: /bin/bash
+  register: _kubectl_version
+
+- name: Join the bootstrapper node
+  shell: kubeadm join proxy.k8s.lan:6443 --token $(cat /opt/TOKEN) --discovery-token-ca-cert-hash $(cat /opt/CA_KEY_HASH) --control-plane --certificate-key $(cat /opt/CERTIFICATE_KEY)
+  args:
+    executable: /bin/bash
+  register: _kubeadm_init
+
+- name: display _kubeadm_init
+  debug:
+    msg: "{{ _kubeadm_init.stdout_lines }}"
+
+- name: Create .kube folder
+  file:
+    state: directory
+    path: /root/.kube
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0644
+
+...

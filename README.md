@@ -105,7 +105,7 @@ ansible-playbook playbook.yml
 
 #### Installation Steps (Ansible Playbooks)
 
-##### K8s Nodes
+##### K8s Nodes - Prerequesites
 
 Add docker daemon.json
 
@@ -199,9 +199,9 @@ backend apiserver
     mode tcp
     option ssl-hello-chk
     balance     roundrobin
-        server master1.k8s.lan 192.168.188.11:6443 check
-        server master2.k8s.lan 192.168.188.12:6443 check
-        server master3.k8s.lan 192.168.188.13:6443 check
+        server master1.k8s.lan 192.168.199.11:6443 check
+        server master2.k8s.lan 192.168.199.12:6443 check
+        server master3.k8s.lan 192.168.199.13:6443 check
 
 #---------------------------------------------------------------------
 # round robin balancing for worker nodes
@@ -218,6 +218,20 @@ Testing the loadbalancer
 
 ```
 nc -v proxy.k8s.lan 6443
+```
+
+##### K8s ControlPlane
+
+On the first node, generate a Cluster Token
+
+```
+TOKEN=$(sudo kubeadm token generate)
+```
+
+Initialize the Controlplane on the first node
+
+```
+sudo kubeadm init --token=${TOKEN} --kubernetes-version=v1.18.2 --pod-network-cidr=10.244.0.0/16
 ```
 
 ### Kubernetes

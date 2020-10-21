@@ -14,9 +14,6 @@
   become: true
   become_method: sudo
 
-  vars:
-    some_var: some_value
-
   roles:
   - ha_proxy
   # https://github.com/kubernetes/kubeadm/blob/master/docs/ha-considerations.md
@@ -25,13 +22,19 @@
   become: true
   become_method: sudo
 
-  vars:
-    some_var: some_value
-
   roles:
   - andrelohmann.docker
   - rpi_k8s_prerequesites
   # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+  # https://opensource.com/article/20/6/kubernetes-raspberry-pi
+
+- hosts: master
+  become: true
+  become_method: sudo
+
+  roles:
+  - rpi_k8s_controlplane
+  # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
   # https://opensource.com/article/20/6/kubernetes-raspberry-pi
 
 ...
