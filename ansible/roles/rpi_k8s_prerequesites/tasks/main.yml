@@ -44,8 +44,7 @@
 - name: install packages
   apt:
     name: "{{ packages }}"
-    state: latest
-    dpkg_options: 'force-confnew,force-confdef'
+    state: present
     autoclean: yes
     autoremove: yes
     update_cache: yes
