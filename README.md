@@ -103,6 +103,123 @@ cd ansible
 ansible-playbook playbook.yml
 ```
 
+#### Installation Steps (Ansible Playbooks)
+
+##### K8s Nodes
+
+Add docker daemon.json
+
+```
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+```
+
+Add k8s.conf
+
+```
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+```
+
+Add cgroup configs to /boot/firmware/cmdline.txt
+
+```
+net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4 elevator=deadline rootwait fixrtc cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 swapaccount=1
+```
+
+Add deb repository
+
+```
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+```
+
+Install packages and set apt-mark to hold
+
+```
+apt install kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+```
+
+##### Loadbalancer
+
+Install HA Proxy with following configuration
+
+```
+# /etc/haproxy/haproxy.cfg
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 1
+    timeout http-request    10s
+    timeout queue           20s
+    timeout connect         5s
+    timeout client          20s
+    timeout server          20s
+    timeout http-keep-alive 10s
+    timeout check           10s
+
+#---------------------------------------------------------------------
+# apiserver frontend which proxys to the masters
+#---------------------------------------------------------------------
+frontend apiserver
+    bind *:6443
+    mode tcp
+    option tcplog
+    default_backend apiserver
+
+#---------------------------------------------------------------------
+# round robin balancing for apiserver
+#---------------------------------------------------------------------
+backend apiserver
+    option httpchk GET /healthz
+    http-check expect status 200
+    mode tcp
+    option ssl-hello-chk
+    balance     roundrobin
+        server master1.k8s.lan 192.168.188.11:6443 check
+        server master2.k8s.lan 192.168.188.12:6443 check
+        server master3.k8s.lan 192.168.188.13:6443 check
+
+#---------------------------------------------------------------------
+# round robin balancing for worker nodes
+#---------------------------------------------------------------------
+listen worker
+    bind *:30000-32767
+    mode tcp
+    server worker1.k8s.lan 192.168.199.21
+    server worker2.k8s.lan 192.168.199.22
+    server worker3.k8s.lan 192.168.199.23
+```
+
+Testing the loadbalancer
+
+```
+nc -v proxy.k8s.lan 6443
+```
+
 ### Kubernetes
 
   * https://phoenixnap.com/kb/how-to-install-kubernetes-on-a-bare-metal-server
