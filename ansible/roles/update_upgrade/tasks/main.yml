@@ -5,4 +5,7 @@
     update_cache: yes
     upgrade: dist
 
+- name: Set the hostname
+  hostname:
+    name: "inventory_hostname"
 ...
