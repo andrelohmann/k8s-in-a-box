@@ -7,5 +7,5 @@
 
 - name: Set the hostname
   hostname:
-    name: "inventory_hostname"
+    name: "{{ inventory_hostname }}"
 ...
