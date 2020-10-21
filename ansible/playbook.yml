@@ -30,7 +30,7 @@
 
   roles:
   - andrelohmann.docker
-  - rpi_k8s_install
+  - rpi_k8s_prerequesites
   # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
   # https://opensource.com/article/20/6/kubernetes-raspberry-pi
 
