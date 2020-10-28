@@ -1,0 +1,6 @@
+---
+- name: kubeadm reset
+  shell: kubeadm reset
+  args:
+    executable: /bin/bash
+...
