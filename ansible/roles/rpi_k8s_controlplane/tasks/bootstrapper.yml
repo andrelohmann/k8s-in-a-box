@@ -49,7 +49,7 @@
   register: _kubectl_version
 
 - name: Initialize the first controlplane node
-  shell: kubeadm init --token=$(cat /opt/TOKEN) --kubernetes-version={{ _kubectl_version.stdout }} --control-plane-endpoint "proxy.k8s.lan:6443" --pod-network-cidr=10.100.0.0/16 --upload-certs --certificate-key $(cat /opt/CERTIFICATE_KEY)
+  shell: kubeadm init --token=$(cat /opt/TOKEN) --kubernetes-version={{ _kubectl_version.stdout }} --control-plane-endpoint "proxy.k8s.lan:6443" --pod-network-cidr={{ pod_network_cidr }} --upload-certs --certificate-key $(cat /opt/CERTIFICATE_KEY)
   args:
     executable: /bin/bash
   register: _kubeadm_init

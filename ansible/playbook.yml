@@ -32,6 +32,9 @@
   become: true
   become_method: sudo
 
+  vars:
+    pod_network_cidr: 10.244.0.0/16
+
   roles:
   - rpi_k8s_controlplane
   # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/

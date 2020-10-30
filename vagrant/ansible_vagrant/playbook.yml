@@ -4,9 +4,6 @@
   become: true
   become_method: sudo
 
-  #vars:
-  #  some_var: some_value
-
   roles:
   - andrelohmann.root_colored_prompt
   - andrelohmann.kubectl
@@ -20,5 +17,13 @@
       chdir: /home/vagrant/ansible
     become: yes
     become_user: vagrant
+
+  - name: Create .kube folder
+    file:
+      state: directory
+      path: /home/vagrant/.kube
+      owner: vagrant
+      group: vagrant
+      mode: 0755
 
 ...
