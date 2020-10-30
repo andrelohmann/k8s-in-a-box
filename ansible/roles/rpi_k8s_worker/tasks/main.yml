@@ -15,14 +15,13 @@
     src: out/CA_KEY_HASH
     dest: /opt/CA_KEY_HASH
 
-- name: check if server is running / worker has joined
-  shell: "kubectl version --short 2>&1 | grep Server"
-  failed_when: false
-  changed_when: false
-  register: kubectl_server
+- name: check if kubelet is intalled / worker has joined
+  stat:
+    path: /var/lib/kubelet/config.yaml
+  register: _kubelet_stat
 
 - name: include worker tasks if kubectl_server return does not equal 0 (is error)
   include: worker.yml
-  when: kubectl_server.rc != 0
+  when: not _kubelet_stat.stat.exists
 
 ...

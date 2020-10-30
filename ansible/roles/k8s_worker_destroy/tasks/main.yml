@@ -36,4 +36,7 @@
   args:
     executable: /bin/bash
 
+- name: apply iptables
+  shell: iptables-restore < /etc/iptables/rules.v4
+
 ...
