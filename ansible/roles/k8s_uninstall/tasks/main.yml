@@ -5,7 +5,7 @@
   args:
     executable: /bin/bash
 
-- name: install packages
+- name: uninstall packages
   apt:
     name: "{{ packages }}"
     state: absent
