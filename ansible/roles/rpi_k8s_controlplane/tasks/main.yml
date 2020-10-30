@@ -35,6 +35,21 @@
       dest: out/CA_KEY_HASH
       flat: yes
 
+  - name: sync kube config locally
+    fetch:
+      src: /etc/kubernetes/admin.conf
+      dest: out/config
+      flat: yes
+
+  - name: copy config
+    local_action:
+      module: copy
+      src: out/config
+      dest: /home/vagrant/.kube/config
+      owner: vagrant
+      group: vagrant
+      mode: 0644
+
   when: is_bootstrapper
 
 - name: join seconbd and third master to controlplane
