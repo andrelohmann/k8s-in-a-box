@@ -1,0 +1,13 @@
+---
+
+- name: Join the worker
+  shell: kubeadm join proxy.k8s.lan:6443 --token $(cat /opt/TOKEN) --discovery-token-ca-cert-hash $(cat /opt/CA_KEY_HASH)
+  args:
+    executable: /bin/bash
+  register: _kubeadm_join
+
+- name: display _kubeadm_join
+  debug:
+    msg: "{{ _kubeadm_join.stdout_lines }}"
+
+...

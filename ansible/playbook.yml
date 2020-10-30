@@ -33,10 +33,20 @@
   become_method: sudo
 
   vars:
-    pod_network_cidr: 10.244.0.0/16
+    pod_network_cidr: 10.244.0.0/16 # for flannel use 10.244.0.0/16
+    k8s_cni: flannel # flannel or calico
 
   roles:
   - rpi_k8s_controlplane
+  # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
+  # https://opensource.com/article/20/6/kubernetes-raspberry-pi
+
+- hosts: worker
+  become: true
+  become_method: sudo
+
+  roles:
+  - rpi_k8s_worker
   # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
   # https://opensource.com/article/20/6/kubernetes-raspberry-pi
 
