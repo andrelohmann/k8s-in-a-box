@@ -1,0 +1,27 @@
+---
+
+- name: kubeadm reset
+  shell: kubeadm reset -f
+  args:
+    executable: /bin/bash
+
+- name: remove secrets
+  file:
+    state: absent
+    path: "/opt/{{ item }}"
+  with_items:
+  - CA_KEY_HASH
+  - CERTIFICATE_KEY
+  - TOKEN
+
+- name: remove /root/.kube
+  file:
+    state: absent
+    path: "/root/.kube"
+
+- name: delete all docker resources
+  shell: docker system prune -af
+  args:
+    executable: /bin/bash
+
+...

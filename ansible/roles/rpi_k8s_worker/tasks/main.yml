@@ -1,0 +1,28 @@
+---
+
+- name: Copy TOKEN to /opt/TOKEN
+  copy:
+    src: out/TOKEN
+    dest: /opt/TOKEN
+
+- name: Copy CERTIFICATE_KEY to /opt/CERTIFICATE_KEY
+  copy:
+    src: out/CERTIFICATE_KEY
+    dest: /opt/CERTIFICATE_KEY
+
+- name: Copy CA_KEY_HASH to /opt/CA_KEY_HASH
+  copy:
+    src: out/CA_KEY_HASH
+    dest: /opt/CA_KEY_HASH
+
+- name: check if server is running / worker has joined
+  shell: "kubectl version --short 2>&1 | grep Server"
+  failed_when: false
+  changed_when: false
+  register: kubectl_server
+
+- name: include worker tasks if kubectl_server return does not equal 0 (is error)
+  include: worker.yml
+  when: kubectl_server.rc != 0
+
+...

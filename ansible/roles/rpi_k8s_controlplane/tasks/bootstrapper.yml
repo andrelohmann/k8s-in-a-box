@@ -86,4 +86,7 @@
     group: root
     mode: 0644
 
+- name: include cni installer
+  include: "{{ k8s_cni }}.yml"
+
 ...

@@ -1,0 +1,22 @@
+---
+
+- name: apt-mark unhold
+  shell: apt-mark unhold kubelet kubeadm kubectl
+  args:
+    executable: /bin/bash
+
+- name: install packages
+  apt:
+    name: "{{ packages }}"
+    state: absent
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+...
