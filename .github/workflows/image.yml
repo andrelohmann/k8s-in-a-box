@@ -23,6 +23,6 @@ jobs:
     - name: build the image
       run: |
         cd docker
-        docker buildx build --tag andrelohmann/k8s-in-a-box:latest --platform linux/amd64,linux/arm/v7,linux/arm64 .
+        docker buildx build --tag ghcr.io/andrelohmann/k8s-in-a-box:latest --platform linux/amd64,linux/arm/v7,linux/arm64 .
     - name: push the image
       run: docker push ghcr.io/andrelohmann/k8s-in-a-box:latest
