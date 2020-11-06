@@ -17,11 +17,10 @@ jobs:
       uses: crazy-max/ghaction-docker-buildx@v1
       with:
         version: latest
-    - name: login to docker hub
-      run: echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
     - name: build the image
       run: |
+        echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
         cd docker
         docker buildx build --tag ghcr.io/andrelohmann/k8s-in-a-box:latest --platform linux/amd64,linux/arm/v7,linux/arm64 .
-    - name: push the image
-      run: docker push ghcr.io/andrelohmann/k8s-in-a-box:latest
+        docker images
+        docker push ghcr.io/andrelohmann/k8s-in-a-box:latest
