@@ -22,6 +22,9 @@ jobs:
       run: |
         echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
         cd docker
-        docker buildx build --tag ghcr.io/andrelohmann/k8s-in-a-box:latest --platform linux/amd64,linux/arm/v7,linux/arm64 .
+        docker buildx build \
+        --platform linux/amd64,linux/arm/v7,linux/arm64 \
+        --tag ghcr.io/andrelohmann/k8s-in-a-box:latest \
+        --output "type=image,push=true" \
+        .
         docker images
-        docker push ghcr.io/andrelohmann/k8s-in-a-box:latest
