@@ -1,0 +1,28 @@
+name: build multiarch docker image
+
+on:
+  push:
+    branches: master
+
+jobs:
+  build:
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        version: latest
+    - name: enter docker folder
+      run: cd docker
+    - name: login to docker hub
+      run: echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USERNAME" --password-stdin
+    - name: build the image
+      run: docker buildx build --tag andrelohmann/k8s-in-a-box:latest --platform linux/amd64,linux/arm/v7,linux/arm64 .
+    - name: push the image
+      run: docker push ghcr.io/andrelohmann/k8s-in-a-box:latest

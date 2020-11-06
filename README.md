@@ -233,6 +233,57 @@ Initialize the Controlplane on the first node
 ```
 sudo kubeadm init --token=${TOKEN} --kubernetes-version=v1.18.2 --pod-network-cidr=10.244.0.0/16
 ```
+## Testing the cluster
+
+### General Health
+
+```
+kubectl cluster-info
+kubectl get nodes
+kubectl get pods --all-namespaces
+kubectl config view
+```
+
+### Testing a deployment
+
+#### Deployment
+
+```
+kubectl create deployment nginx-server --image=nginx
+kubectl get deployments
+kubectl get pods
+kubectl get events
+```
+
+#### Service
+
+```
+kubectl expose deployment nginx-server --type=LoadBalancer --port=80 --name=nginx-http
+kubectl get services
+
+```
+
+#### Delete everything
+
+```
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+```
+
+#### Namespaces
+
+https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
+
+```
+kubectl get namespaces
+kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl create -f https://k8s.io/examples/admin/namespace-prod.json
+kubectl get namespaces --show-labels
+kubectl create deployment snowflake --image=k8s.gcr.io/serve_hostname  -n=development --replicas=2
+kubectl get deployment -n=development
+```
+
+## Sources
 
 ### Kubernetes
 
@@ -249,3 +300,4 @@ sudo kubeadm init --token=${TOKEN} --kubernetes-version=v1.18.2 --pod-network-ci
   * https://bee42.com/de/blog/tutorials/kubernetes-cluster-on-embedded/
   * https://rook.io/
   * https://rook.io/docs/rook/v1.4/ceph-quickstart.html
+  * https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/
