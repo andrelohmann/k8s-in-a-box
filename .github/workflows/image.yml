@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +18,7 @@ jobs:
       with:
         version: latest
     - name: login to docker hub
-      run: echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USERNAME" --password-stdin
+      run: echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
     - name: build the image
       run: |
         cd docker
