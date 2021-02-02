@@ -10,19 +10,17 @@
     state: absent
     path: "/opt/{{ item }}"
   with_items:
-  - CA_KEY_HASH
-  - CERTIFICATE_KEY
-  - TOKEN
-
-- name: remove /etc/cni/net.d
-  file:
-    state: absent
-    path: "/etc/cni/net.d"
+  - kube
 
 - name: delete all docker resources
   shell: docker system prune -af
   args:
     executable: /bin/bash
+
+- name: remove /etc/cni/net.d
+  file:
+    state: absent
+    path: "/etc/cni/net.d"
 
 - name: iptables reset
   shell: |

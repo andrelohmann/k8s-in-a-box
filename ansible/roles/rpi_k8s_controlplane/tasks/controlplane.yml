@@ -7,7 +7,7 @@
   register: _kubectl_version
 
 - name: Join the bootstrapper node
-  shell: kubeadm join proxy.k8s.lan:6443 --token $(cat /opt/TOKEN) --discovery-token-ca-cert-hash $(cat /opt/CA_KEY_HASH) --control-plane --certificate-key $(cat /opt/CERTIFICATE_KEY)
+  shell: kubeadm join proxy.k8s.lan:6443 --token $(cat /opt/kube/secrets/TOKEN) --discovery-token-ca-cert-hash $(cat /opt/kube/secrets/CA_KEY_HASH) --control-plane --certificate-key $(cat /opt/kube/secrets/CERTIFICATE_KEY)
   args:
     executable: /bin/bash
   register: _kubeadm_init

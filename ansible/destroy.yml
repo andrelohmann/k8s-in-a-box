@@ -5,15 +5,21 @@
   become_method: sudo
 
   roles:
-  - k8s_worker_destroy
-  - k8s_uninstall
+  - k8s_node_destroy
 
 - hosts: master
   become: true
   become_method: sudo
 
   roles:
+  - k8s_node_destroy
   - k8s_master_destroy
+
+- hosts: k8s
+  become: true
+  become_method: sudo
+
+  roles:
   - k8s_uninstall
 
 ...

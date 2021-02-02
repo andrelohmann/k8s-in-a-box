@@ -8,22 +8,46 @@
 - name: crate token file if not existen
   block:
 
+  - name: Create /opt/kube
+    file:
+      state: directory
+      path: /opt/kube
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Create /opt/kube/secrets
+    file:
+      state: directory
+      path: /opt/kube/secrets
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Create /opt/kube/configs
+    file:
+      state: directory
+      path: /opt/kube/configs
+      owner: root
+      group: root
+      mode: 0755
+
   - name: generate token
     shell: kubeadm token generate
     args:
       executable: /bin/bash
     register: _token
 
-  - name: write token to /opt/TOKEN
+  - name: write token to /opt/kube/secrets/TOKEN
     copy:
       content: "{{ _token.stdout }}"
-      dest: /opt/TOKEN
+      dest: /opt/kube/secrets/TOKEN
 
   when: not token_file.stat.exists
 
 - name: check for certificate-key
   stat:
-    path: /opt/CERTIFICATE_KEY
+    path: /opt/kube/secrets/CERTIFICATE_KEY
   register: certkey_file
 
 - name:
@@ -35,10 +59,10 @@
       executable: /bin/bash
     register: _certificate_key
 
-  - name: write certificate-key to /opt/CERTIFICATE_KEY
+  - name: write certificate-key to /opt/kube/secrets/CERTIFICATE_KEY
     copy:
       content: "{{ _certificate_key.stdout }}"
-      dest: /opt/CERTIFICATE_KEY
+      dest: /opt/kube/secrets/CERTIFICATE_KEY
 
   when: not certkey_file.stat.exists
 
@@ -49,7 +73,7 @@
   register: _kubectl_version
 
 - name: Initialize the first controlplane node
-  shell: kubeadm init --token=$(cat /opt/TOKEN) --kubernetes-version={{ _kubectl_version.stdout }} --control-plane-endpoint "proxy.k8s.lan:6443" --pod-network-cidr={{ pod_network_cidr }} --upload-certs --certificate-key $(cat /opt/CERTIFICATE_KEY)
+  shell: kubeadm init --token=$(cat /opt/kube/secrets/TOKEN) --kubernetes-version={{ _kubectl_version.stdout }} --control-plane-endpoint "proxy.k8s.lan:6443" --pod-network-cidr={{ pod_network_cidr }} --upload-certs --certificate-key $(cat /opt/kube/secrets/CERTIFICATE_KEY)
   args:
     executable: /bin/bash
   register: _kubeadm_init
@@ -64,10 +88,10 @@
     executable: /bin/bash
   register: _ca_key_hash
 
-- name: write CA key hash to /opt/CA_KEY_HASH
+- name: write CA key hash to /opt/kube/secrets/CA_KEY_HASH
   copy:
     content: "sha256:{{ _ca_key_hash.stdout }}"
-    dest: /opt/CA_KEY_HASH
+    dest: /opt/kube/secrets/CA_KEY_HASH
 
 - name: Create .kube folder
   file:
@@ -88,5 +112,6 @@
 
 - name: include cni installer
   include: "{{ k8s_cni }}.yml"
+  when: k8s_cni != 'none'
 
 ...

@@ -34,7 +34,7 @@
 
   vars:
     pod_network_cidr: 10.244.0.0/16 # for flannel use 10.244.0.0/16
-    k8s_cni: flannel # flannel or calico
+    k8s_cni: calico # flannel or calico or none
 
   roles:
   - rpi_k8s_controlplane

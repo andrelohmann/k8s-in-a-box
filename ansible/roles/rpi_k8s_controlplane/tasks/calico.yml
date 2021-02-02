@@ -1,0 +1,21 @@
+---
+# https://docs.projectcalico.org/getting-started/kubernetes/self-managed-onprem/onpremises
+# https://levelup.gitconnected.com/step-by-step-slow-guide-kubernetes-cluster-on-raspberry-pi-4b-part-3-899fc270600e
+- name: download calico resource manifest
+  get_url:
+    url: https://docs.projectcalico.org/manifests/calico.yaml
+    dest: /opt/kube/configs/calico.yaml
+    mode: 0755
+
+- name: replace default cidr
+  replace:
+    path: /opt/kube/configs/calico.yaml
+    regexp: '192.168.0.0/16'
+    replace: "{{ pod_network_cidr }}"
+
+- name: apply calico
+  shell: kubectl apply -f /opt/kube/configs/calico.yaml
+  args:
+    executable: /bin/bash
+
+...

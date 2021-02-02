@@ -43,4 +43,9 @@ iptables:
       ip: 192.168.199.22
     - host: worker3.k8s.lan
       ip: 192.168.199.23
+  - name: CalicoBGP
+    comment: "Calico networking (BGP)"
+    protocol: tcp  # tcp/icmp/udp
+    ports:
+    - 179
   custom_post_rules: []

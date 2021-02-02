@@ -1,47 +1,8 @@
 ---
 
-- name: kubeadm reset
-  shell: kubeadm reset -f
-  args:
-    executable: /bin/bash
-
-- name: remove secrets
-  file:
-    state: absent
-    path: "/opt/{{ item }}"
-  with_items:
-  - CA_KEY_HASH
-  - CERTIFICATE_KEY
-  - TOKEN
-
-- name: remove /etc/cni/net.d
-  file:
-    state: absent
-    path: "/etc/cni/net.d"
-
 - name: remove /root/.kube
   file:
     state: absent
     path: "/root/.kube"
-
-- name: delete all docker resources
-  shell: docker system prune -af
-  args:
-    executable: /bin/bash
-
-- name: iptables reset
-  shell: |
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-    iptables -t nat -F
-    iptables -t mangle -F
-    iptables -F
-    iptables -X
-  args:
-    executable: /bin/bash
-
-- name: apply iptables
-  shell: iptables-restore < /etc/iptables/rules.v4
 
 ...

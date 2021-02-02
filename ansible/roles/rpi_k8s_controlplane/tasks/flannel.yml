@@ -1,6 +1,6 @@
 ---
 
-- name: generate certificate-key
+- name: apply flannel cni
   shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
   args:
     executable: /bin/bash

@@ -239,9 +239,22 @@ sudo kubeadm init --token=${TOKEN} --kubernetes-version=v1.18.2 --pod-network-ci
 
 ```
 kubectl cluster-info
-kubectl get nodes
+kubectl get nodes -o wide
 kubectl get pods --all-namespaces
 kubectl config view
+kubectl explain pod
+kubectl explain service
+kubectl explain deployment
+```
+
+### Node Failure
+
+```
+kubectl get nodes -o wide
+kubectl describe nodes worker1.k8s.lan
+kubectl cordon worker1.k8s.lan
+kubectl drain worker1.k8s.lan
+kubectl delete node worker1.k8s.lan
 ```
 
 ### Testing a deployment
@@ -249,7 +262,7 @@ kubectl config view
 #### Deployment
 
 ```
-kubectl create deployment nginx-server --image=nginx
+kubectl create deployment echo-server --image=ghcr.io/andrelohmann/k8s-in-a-box:latest
 kubectl get deployments
 kubectl get pods
 kubectl get events
@@ -258,16 +271,16 @@ kubectl get events
 #### Service
 
 ```
-kubectl expose deployment nginx-server --type=LoadBalancer --port=80 --name=nginx-http
+kubectl expose deployment echo-server --type=NodePort --port=8000 --name=echo
 kubectl get services
-
+kubectl get services echo
 ```
 
 #### Delete everything
 
 ```
-kubectl delete service hello-node
-kubectl delete deployment hello-node
+kubectl delete service echo
+kubectl delete deployment echo-server
 ```
 
 #### Namespaces
@@ -279,8 +292,11 @@ kubectl get namespaces
 kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl create -f https://k8s.io/examples/admin/namespace-prod.json
 kubectl get namespaces --show-labels
-kubectl create deployment snowflake --image=k8s.gcr.io/serve_hostname  -n=development --replicas=2
-kubectl get deployment -n=development
+kubectl create deployment echo-server --image=ghcr.io/andrelohmann/k8s-in-a-box:latest  -n=development --replicas=3
+kubectl get deployment echo-server -n=development
+kubectl expose deployment echo-server --type=NodePort --port=8000 --name=echo -n=development
+kubectl get services echo -n=development
+kubectl get pods -o wide -n=development
 ```
 
 ## Sources
@@ -301,3 +317,16 @@ kubectl get deployment -n=development
   * https://rook.io/
   * https://rook.io/docs/rook/v1.4/ceph-quickstart.html
   * https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/
+  * https://medium.com/@chamilad/load-balancing-and-reverse-proxying-for-kubernetes-services-f03dd0efe80
+  * https://levelup.gitconnected.com/step-by-step-slow-guide-kubernetes-cluster-on-raspberry-pi-4b-part-3-899fc270600e
+  * https://vitobotta.com/2020/03/20/haproxy-kubernetes-hetzner-cloud/
+
+### Docker Security
+
+  * https://www.computerwoche.de/a/7-security-tools-fuer-docker-und-kubernetes,3546931
+
+### Kubernetes Application deployments
+
+  * https://wkrzywiec.medium.com/deployment-of-multiple-apps-on-kubernetes-cluster-walkthrough-e05d37ed63d1
+  * https://wkrzywiec.medium.com/how-to-deploy-application-on-kubernetes-with-helm-39f545ad33b8
+  * https://medium.com/swlh/how-to-declaratively-run-helm-charts-using-helmfile-ac78572e6088

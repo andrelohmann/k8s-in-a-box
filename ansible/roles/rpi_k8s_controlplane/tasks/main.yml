@@ -19,19 +19,19 @@
 
   - name: sync TOKEN file locally
     fetch:
-      src: /opt/TOKEN
+      src: /opt/kube/secrets/TOKEN
       dest: out/TOKEN
       flat: yes
 
   - name: sync CERTIFICATE_KEY file locally
     fetch:
-      src: /opt/CERTIFICATE_KEY
+      src: /opt/kube/secrets/CERTIFICATE_KEY
       dest: out/CERTIFICATE_KEY
       flat: yes
 
   - name: sync CA_KEY_HASH file locally
     fetch:
-      src: /opt/CA_KEY_HASH
+      src: /opt/kube/secrets/CA_KEY_HASH
       dest: out/CA_KEY_HASH
       flat: yes
 
@@ -55,20 +55,44 @@
 - name: join seconbd and third master to controlplane
   block:
 
-  - name: Copy TOKEN to /opt/TOKEN
+  - name: Create /opt/kube
+    file:
+      state: directory
+      path: /opt/kube
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Create /opt/kube/secrets
+    file:
+      state: directory
+      path: /opt/kube/secrets
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Create /opt/kube/configs
+    file:
+      state: directory
+      path: /opt/kube/configs
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Copy TOKEN to /opt/kube/secrets/TOKEN
     copy:
       src: out/TOKEN
-      dest: /opt/TOKEN
+      dest: /opt/kube/secrets/TOKEN
 
-  - name: Copy CERTIFICATE_KEY to /opt/CERTIFICATE_KEY
+  - name: Copy CERTIFICATE_KEY to /opt/kube/secrets/CERTIFICATE_KEY
     copy:
       src: out/CERTIFICATE_KEY
-      dest: /opt/CERTIFICATE_KEY
+      dest: /opt/kube/secrets/CERTIFICATE_KEY
 
-  - name: Copy CA_KEY_HASH to /opt/CA_KEY_HASH
+  - name: Copy CA_KEY_HASH to /opt/kube/secrets/CA_KEY_HASH
     copy:
       src: out/CA_KEY_HASH
-      dest: /opt/CA_KEY_HASH
+      dest: /opt/kube/secrets/CA_KEY_HASH
 
   - name: check if server is running / controlplane has been initialized
     shell: "kubectl version --short 2>&1 | grep Server"

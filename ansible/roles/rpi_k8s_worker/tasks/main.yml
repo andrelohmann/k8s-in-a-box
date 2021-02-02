@@ -1,19 +1,43 @@
 ---
 
-- name: Copy TOKEN to /opt/TOKEN
+- name: Create /opt/kube
+  file:
+    state: directory
+    path: /opt/kube
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create /opt/kube/secrets
+  file:
+    state: directory
+    path: /opt/kube/secrets
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create /opt/kube/configs
+  file:
+    state: directory
+    path: /opt/kube/configs
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy TOKEN to /opt/kube/secrets/TOKEN
   copy:
     src: out/TOKEN
-    dest: /opt/TOKEN
+    dest: /opt/kube/secrets/TOKEN
 
-- name: Copy CERTIFICATE_KEY to /opt/CERTIFICATE_KEY
+- name: Copy CERTIFICATE_KEY to /opt/kube/secrets/CERTIFICATE_KEY
   copy:
     src: out/CERTIFICATE_KEY
-    dest: /opt/CERTIFICATE_KEY
+    dest: /opt/kube/secrets/CERTIFICATE_KEY
 
-- name: Copy CA_KEY_HASH to /opt/CA_KEY_HASH
+- name: Copy CA_KEY_HASH to /opt/kube/secrets/CA_KEY_HASH
   copy:
     src: out/CA_KEY_HASH
-    dest: /opt/CA_KEY_HASH
+    dest: /opt/kube/secrets/CA_KEY_HASH
 
 - name: check if kubelet is intalled / worker has joined
   stat:

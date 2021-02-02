@@ -19,4 +19,8 @@
     - kubeadm
     - kubectl
 
+- name: reboot
+  reboot:
+    reboot_timeout: 300
+
 ...
