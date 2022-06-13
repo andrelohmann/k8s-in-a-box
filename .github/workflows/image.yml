@@ -3,8 +3,7 @@ name: build multiarch docker image
 on:
   push:
     branches:
-    - '**'
-    #branches: master
+    - master
 
 env:
   REGISTRY: ghcr.io
@@ -52,32 +51,3 @@ jobs:
         platforms: linux/amd64,linux/arm/v7,linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-
-# on:
-#   push:
-#     branches: master
-#
-# jobs:
-#   build:
-#     env:
-#       DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v2
-#     - name: Install buildx
-#       id: buildx
-#       uses: crazy-max/ghaction-docker-buildx@v3
-#       with:
-#           buildx-version: latest
-#           qemu-version: latest
-#     - name: build the image
-#       run: |
-#         echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
-#         cd docker
-#         docker buildx build \
-#         --platform linux/amd64,linux/arm/v7,linux/arm64 \
-#         --tag ghcr.io/andrelohmann/k8s-in-a-box:latest \
-#         --output "type=image,push=true" \
-#         .
-#         docker images
