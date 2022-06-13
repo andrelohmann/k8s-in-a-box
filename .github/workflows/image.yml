@@ -2,29 +2,70 @@ name: build multiarch docker image
 
 on:
   push:
-    branches: master
+    branches: *
+    #branches: master
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: andrelohmann/k8s-in-a-box
 
 jobs:
-  build:
-    env:
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+  build-and-push-image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install buildx
-      id: buildx
-      uses: crazy-max/ghaction-docker-buildx@v3
-      with:
-          buildx-version: latest
-          qemu-version: latest
-    - name: build the image
-      run: |
-        echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
-        cd docker
-        docker buildx build \
-        --platform linux/amd64,linux/arm/v7,linux/arm64 \
-        --tag ghcr.io/andrelohmann/k8s-in-a-box:latest \
-        --output "type=image,push=true" \
-        .
-        docker images
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action
+        with:
+          context: ./docker
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+# on:
+#   push:
+#     branches: master
+#
+# jobs:
+#   build:
+#     env:
+#       DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+#     - name: Install buildx
+#       id: buildx
+#       uses: crazy-max/ghaction-docker-buildx@v3
+#       with:
+#           buildx-version: latest
+#           qemu-version: latest
+#     - name: build the image
+#       run: |
+#         echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "andrelohmann" --password-stdin
+#         cd docker
+#         docker buildx build \
+#         --platform linux/amd64,linux/arm/v7,linux/arm64 \
+#         --tag ghcr.io/andrelohmann/k8s-in-a-box:latest \
+#         --output "type=image,push=true" \
+#         .
+#         docker images
