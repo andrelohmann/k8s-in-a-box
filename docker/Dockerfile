@@ -8,7 +8,8 @@ COPY . ${GOPATH}/src/github.com/andrelohmann/k8s-in-a-box
 WORKDIR ${GOPATH}/src/github.com/andrelohmann/k8s-in-a-box
 
 # compile source code and copy into $PATH
-RUN go install
+RUN go mod init; \
+    go install;
 
 # the default command runs the service in the foreground
 CMD ["k8s-in-a-box"]
