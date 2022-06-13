@@ -2,7 +2,8 @@ name: build multiarch docker image
 
 on:
   push:
-    branches: *
+    branches:
+    - '**'
     #branches: master
 
 env:
