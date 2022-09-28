@@ -35,8 +35,20 @@ IP Addresses:
   * Worker Node1 - 192.168.199.21
   * Worker Node2 - 192.168.199.22
   * Worker Node3 - 192.168.199.23
+ 
+### Router Steps
 
-
+  * Install Open-WRT
+  * Connect via cable with the right port (left is still configured as WAN port)
+  * 192.168.1.1 <- root : admin
+  * Network -> Interfaces -> delete both WAN ports
+  * Network -> Interfaces -> Devices -> edit br-lan -> add eth0.2 to bridge ports
+  * Network -> Wireless -> radio0 -> Scan -> Select network and connect to it
+  * Configure a second SSID as Master
+  * !you can only have one client active!
+  * If the client can't connect, the AP (master) SSID will not be provided
+  * Everytime you disconnect the cluster, disable the client network first, otherwise next time, you are not able to connect to the routers AP (master)
+  
 ## Installation
 
 ### OS Preparation
